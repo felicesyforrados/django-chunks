@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from .signals import refresh_cache
 
 class Chunk(models.Model):
     """
@@ -16,6 +17,12 @@ class Chunk(models.Model):
     class Meta:
         verbose_name = _(u'chunk')
         verbose_name_plural = _(u'chunks')
+
+    def send_signals(self):
+        """
+        Enviar un Signal para la app Django
+        """
+        refresh_cache.send(sender=self)
 
     def __unicode__(self):
         return u"%s" % (self.key,)
